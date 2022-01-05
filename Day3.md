@@ -15,3 +15,6 @@ todo
 learn
 -----------
 1. JS
+2. domain
+3. Data (annotation, resource, snapshot, user)
+
