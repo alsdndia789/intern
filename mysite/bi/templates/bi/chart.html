@@ -1,0 +1,212 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chart</title>
+    <script src="https://code.highcharts.com/stock/highstock.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.highcharts.com/highcharts.js"></script>
+    <script src="https://code.highcharts.com/modules/exporting.js"></script>
+    <script src="https://code.highcharts.com/modules/export-data.js"></script>
+    <script src="https://code.highcharts.com/modules/accessibility.js"></script>
+{% load static %}
+    <link rel="stylesheet" href="{% static 'bi/chart.css' %}">
+</head>
+<body>
+  <div>
+    <label for="option">그래프 종류</label>
+    <select name="option_selection" id="option" onchange="changeGraph()">
+      <option value="" selected disabled hidden></option>
+      <option value="type1">사용금액, 카메라 개수 / 가입날짜</option>
+      <option value="type2">옵션2</option>
+      <option value="type3">옵션3</option>
+      <option value="type4">옵션4</option>
+      <option value="type5">옵션5</option>
+    </select>
+  </div>
+<div id="container">
+
+  <script>
+
+    function setChart() {
+          Highcharts.setOption({
+            global: {
+              useUTC: false
+            }
+          });
+        };
+
+    function changeGraph() {
+        var target = document.getElementById("option");
+        type = target.options[target.selectedIndex].value
+
+            if (type == "type1"){
+            $.ajax({
+              url: "{% url 'bi:predict_User_api' %}",
+              dataType: 'json',
+              success: function (data) {
+
+                Highcharts.setOptions({
+                  global: {
+                    useUTC: false
+                  }
+                });
+
+                Highcharts.stockChart("container", {
+
+                  chart: {
+                    height: 500
+                  },
+
+                  title: {
+                    text: 'User'
+                  },
+
+                  rangeSelector: {
+                    selected: 5,
+                    inputEnabled: false
+                  },
+                  xAxis: {
+                    type: 'datetime',
+                    labels:{
+                      formatter: function(){
+                        return Highcharts.dateFormat('%y.%m.%d', this.value);
+                      },
+                      step: 3
+                    }
+                  },
+
+                  yAxis: {
+                    labels: {
+                      format: '{value}p',
+                      style: {
+                        color: 'rgba(0,0,0,.6)',
+                      },
+                      x: 30,
+                    },
+                    opposite: false,
+                    tickInterval: 50,
+                  },
+
+                  tooltip: {
+                    xDateFormat: '%Y-%m-%d',
+                    split: true
+                  },
+
+                  series: [{
+                      name: '사용 금액',
+                      data: data.price,
+                      color: 'rgba(0,200,0,.6)',
+                      lineWidth: 2
+                  },
+                  {
+                      name: '카메라 개수',
+                      data: data.camera_num,
+                      lineWidth: 3
+                  }],
+
+                  legend: {
+                    enabled: true,
+                    align: 'left',
+                    verticalAlign: 'top',
+                    floating: true,
+                    x: 30,
+                    y: 70
+                  },
+
+                  responsive: {
+                    rules: [{
+                      condition: {
+                        maxWidth: 600
+                      },
+                      chartOptions: {
+                        chart: {
+                          height: 300
+                        },
+                        navigator: {
+                          enabled: false
+                        }
+                      }
+                    }]
+                  }
+                });
+              }
+            });
+           }
+         else if (type == "type2"){
+            $.ajax({
+              url: "{% url 'bi:predict_User_api' %}",
+              dataType: 'json',
+              success: function (data) {
+
+                Highcharts.setOptions({
+                  global: {
+                    useUTC: false
+                  }
+                });
+          Highcharts.chart('container', {
+            chart: {
+              plotBackgroundColor: null,
+              plotBorderWidth: null,
+              plotShadow: false,
+              type: 'pie'
+            },
+            title: {
+              text: '사용자 분포'
+            },
+            tooltip: {
+              pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+              point: {
+                valueSuffix: '%'
+              }
+            },
+            plotOptions: {
+              pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                  enabled: false
+                },
+                showInLegend: true
+              }
+            },
+            series: [{
+              name: 'Brands',
+              colorByPoint: true,
+              data: [{
+                name: 'Hi',
+                y: 61.41,
+                sliced: true,
+                selected: true
+              }, {
+                name: 'Internet Explorer',
+                y: 11.84
+              }, {
+                name: 'Firefox',
+                y: 10.85
+              }, {
+                name: 'Edge',
+                y: 4.67
+              }, {
+                name: 'Safari',
+                y: 4.18
+              }, {
+                name: 'Other',
+                y: 7.05
+              }]
+            }]
+          });
+          }
+          });
+         }
+        }
+
+
+  </script>
+</div>
+<a href="{% url 'bi:index' %}">{{ "뒤로가기" }}</a>
+</body>
+</html>
