@@ -7,6 +7,7 @@ do
 3. scrum 회의에 참여
 4. 질문지 간략하게 만듬
 5. Pie graph에 있던 버그 수정
+6. Black 을 사용하여 코드 수정
 
 
 todo
