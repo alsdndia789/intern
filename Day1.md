@@ -4,7 +4,7 @@ learn
 ----------
 1.에자일 방법
 
-2.OKP, KIP
+2.OKP, KPI
 
 3.MEISSA
 
